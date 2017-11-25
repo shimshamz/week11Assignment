@@ -51,5 +51,31 @@ if ($action == 'list_products') {
         add_product($category_id, $code, $name, $price);
         header("Location: .?category_id=$category_id");
     }
-}    
+} else if ($action == 'list_categories') {
+     $categories = get_categories();
+     include('category_list.php');
+
+} else if ($action == 'delete_category') {
+    $category_id = filter_input(INPUT_POST, 'category_id', 
+            FILTER_VALIDATE_INT);
+    if ($category_id == NULL || $category_id == FALSE) {
+        $error = "Missing or incorrect category id.";
+        include('../errors/error.php');
+    } else { 
+        delete_category($category_id);
+        header("Location: .?action=list_categories");
+    }
+} else if ($action == 'add_category_form') {
+    include('category_add.php');    
+} else if ($action == 'add_category') {
+    $catname = filter_input(INPUT_POST, 'catName');
+    if ($catname == NULL) {
+        $error = "Invalid category data. Check all fields and try again.";
+        include('../errors/error.php');
+    }
+    else {
+        add_category($catname);
+        header("Location: .?action=list_categories");
+    }
+}
 ?>
